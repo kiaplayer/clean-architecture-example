@@ -14,6 +14,7 @@ import (
 
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/document"
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/reference"
+	mocks "github.com/kiaplayer/clean-architecture-example/internal/handlers/create_sale_order/mocks"
 )
 
 func TestHandle_Success(t *testing.T) {
@@ -21,8 +22,8 @@ func TestHandle_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	useCaseMock := NewMockuseCase(ctrl)
-	transactorMock := NewMocktransactor(ctrl)
+	useCaseMock := mocks.NewMockuseCase(ctrl)
+	transactorMock := mocks.NewMocktransactor(ctrl)
 	handler := NewHandler(useCaseMock, transactorMock)
 
 	var inputProducts []document.SaleOrderProduct
@@ -71,8 +72,8 @@ func TestHandle_checkAccessError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	useCaseMock := NewMockuseCase(ctrl)
-	transactorMock := NewMocktransactor(ctrl)
+	useCaseMock := mocks.NewMockuseCase(ctrl)
+	transactorMock := mocks.NewMocktransactor(ctrl)
 	handler := NewHandler(useCaseMock, transactorMock)
 
 	bodyReader := bytes.NewReader([]byte(`{}`))
@@ -92,8 +93,8 @@ func TestHandle_validateAndPrepareError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	useCaseMock := NewMockuseCase(ctrl)
-	transactorMock := NewMocktransactor(ctrl)
+	useCaseMock := mocks.NewMockuseCase(ctrl)
+	transactorMock := mocks.NewMocktransactor(ctrl)
 	handler := NewHandler(useCaseMock, transactorMock)
 
 	bodyReader := bytes.NewReader([]byte(`{}`))
@@ -113,8 +114,8 @@ func TestHandle_UseCaseError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	useCaseMock := NewMockuseCase(ctrl)
-	transactorMock := NewMocktransactor(ctrl)
+	useCaseMock := mocks.NewMockuseCase(ctrl)
+	transactorMock := mocks.NewMocktransactor(ctrl)
 	handler := NewHandler(useCaseMock, transactorMock)
 
 	var inputProducts []document.SaleOrderProduct

@@ -10,6 +10,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
+	mocks "github.com/kiaplayer/clean-architecture-example/internal/adapters/repositories/sale_order/mocks"
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/document"
 	"github.com/kiaplayer/clean-architecture-example/pkg/helpers"
 )
@@ -19,7 +20,7 @@ func TestCreateOrder_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	queryExecutorMock := NewMockQueryExecutor(ctrl)
+	queryExecutorMock := mocks.NewMockQueryExecutor(ctrl)
 
 	repository := NewRepository(queryExecutorMock)
 
@@ -59,7 +60,7 @@ func TestCreateOrder_InsertError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	queryExecutorMock := NewMockQueryExecutor(ctrl)
+	queryExecutorMock := mocks.NewMockQueryExecutor(ctrl)
 
 	repository := NewRepository(queryExecutorMock)
 
@@ -96,7 +97,7 @@ func TestCreateOrder_LastInsertIDError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	queryExecutorMock := NewMockQueryExecutor(ctrl)
+	queryExecutorMock := mocks.NewMockQueryExecutor(ctrl)
 
 	repository := NewRepository(queryExecutorMock)
 

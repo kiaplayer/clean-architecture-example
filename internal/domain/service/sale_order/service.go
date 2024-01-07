@@ -1,3 +1,4 @@
+//go:generate mockgen -package=$GOPACKAGE -source=$GOFILE -destination=mocks/$GOFILE
 package sale_order
 
 import (
