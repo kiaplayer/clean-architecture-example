@@ -49,3 +49,18 @@ func (mr *MockrepositoryMockRecorder) CreateOrder(ctx, order interface{}) *gomoc
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateOrder", reflect.TypeOf((*Mockrepository)(nil).CreateOrder), ctx, order)
 }
+
+// GetByID mocks base method.
+func (m *Mockrepository) GetByID(ctx context.Context, id uint64) (*document.SaleOrder, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByID", ctx, id)
+	ret0, _ := ret[0].(*document.SaleOrder)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByID indicates an expected call of GetByID.
+func (mr *MockrepositoryMockRecorder) GetByID(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByID", reflect.TypeOf((*Mockrepository)(nil).GetByID), ctx, id)
+}

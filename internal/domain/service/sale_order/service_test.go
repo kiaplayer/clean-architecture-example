@@ -62,7 +62,7 @@ func TestCreateOrder_ValidateError(t *testing.T) {
 	actualSaleOrder, actualErr := service.CreateOrder(ctx, saleOrder)
 
 	// assert
-	assert.Equal(t, saleOrder, actualSaleOrder)
+	assert.Nil(t, actualSaleOrder)
 	assert.ErrorContains(t, actualErr, "bad status")
 }
 
@@ -94,4 +94,33 @@ func TestCreateOrder_CreateError(t *testing.T) {
 	// assert
 	assert.Nil(t, actualSaleOrder)
 	assert.ErrorContains(t, actualErr, createErr.Error())
+}
+
+func TestGetOrderByID_Success(t *testing.T) {
+	// arrange
+	ctrl := gomock.NewController(t)
+	ctx := context.Background()
+
+	repositoryMock := mocks.NewMockrepository(ctrl)
+
+	service := NewService(repositoryMock)
+
+	saleOrder := &document.SaleOrder{
+		Document: document.Document{
+			ID:     1,
+			Date:   time.Now().Truncate(time.Second),
+			Number: "0001",
+		},
+	}
+
+	repositoryMock.EXPECT().
+		GetByID(ctx, saleOrder.ID).
+		Return(saleOrder, nil)
+
+	// act
+	actualSaleOrder, actualErr := service.GetOrderByID(ctx, saleOrder.ID)
+
+	// assert
+	assert.NoError(t, actualErr)
+	assert.Equal(t, saleOrder, actualSaleOrder)
 }

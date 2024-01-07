@@ -17,12 +17,10 @@ func NewTransactor(db *sql.DB) *Transactor {
 
 type txKey struct{}
 
-// injectTx injects transaction to context
 func injectTx(ctx context.Context, tx *sql.Tx) context.Context {
 	return context.WithValue(ctx, txKey{}, tx)
 }
 
-// extractTx extracts transaction from context
 func extractTx(ctx context.Context) *sql.Tx {
 	if tx, ok := ctx.Value(txKey{}).(*sql.Tx); ok {
 		return tx

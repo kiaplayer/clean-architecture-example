@@ -11,6 +11,7 @@ import (
 
 type repository interface {
 	CreateOrder(ctx context.Context, order *document.SaleOrder) (*document.SaleOrder, error)
+	GetByID(ctx context.Context, id uint64) (*document.SaleOrder, error)
 }
 
 type Service struct {
@@ -28,13 +29,24 @@ func (s *Service) CreateOrder(ctx context.Context, order *document.SaleOrder) (*
 	if err != nil {
 		return order, err
 	}
-	return s.repository.CreateOrder(ctx, order)
-	// TODO: Additinal logic (reserve, email...)
+	savedSaleOrder, err := s.repository.CreateOrder(ctx, order)
+	if err != nil {
+		return nil, err
+	}
+	// TODO: Additinal logic goes here
+	// - Reserve products
+	// - Send emails to customer and manager (via pgq)
+	// - etc
+	return savedSaleOrder, nil
 }
 
 func (s *Service) ValidateOrder(order *document.SaleOrder) (*document.SaleOrder, error) {
 	if !slices.Contains(document.ValidStatuses, order.Status) {
-		return order, fmt.Errorf("bad status: %d", order.Status)
+		return nil, fmt.Errorf("bad status: %d", order.Status)
 	}
 	return order, nil
+}
+
+func (s *Service) GetOrderByID(ctx context.Context, id uint64) (*document.SaleOrder, error) {
+	return s.repository.GetByID(ctx, id)
 }

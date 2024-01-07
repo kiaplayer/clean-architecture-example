@@ -55,7 +55,7 @@ func (h *Handler) Handle(ctx context.Context, writer http.ResponseWriter, reques
 	saleOrderForCast, err := h.transactor.RunInTx(ctx, func(ctx context.Context) (any, error) {
 		return h.useCase.Handle(ctx, products, company, customer, appendUser)
 	})
-	if err != nil || saleOrderForCast == nil {
+	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		return
 	}
