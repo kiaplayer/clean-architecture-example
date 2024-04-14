@@ -3,22 +3,17 @@ package create_sale_order
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/document"
-	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/reference"
+	"github.com/kiaplayer/clean-architecture-example/internal/handlers/create_sale_order/dto"
 )
 
 type useCase interface {
-	Handle(
-		ctx context.Context,
-		products []document.SaleOrderProduct,
-		company reference.Company,
-		customer reference.Customer,
-		appendUser *reference.User,
-	) (saleOrder *document.SaleOrder, err error)
+	Handle(context.Context, *document.SaleOrder) (*document.SaleOrder, error)
 }
 
 type transactor interface {
@@ -37,6 +32,30 @@ func NewHandler(u useCase, t transactor) *Handler {
 	}
 }
 
+func (h *Handler) validateAndPrepare(request *http.Request) (*document.SaleOrder, error) {
+	var saleOrderDTO dto.SaleOrder
+	err := json.NewDecoder(request.Body).Decode(&saleOrderDTO)
+	if err != nil {
+		return nil, err
+	}
+
+	isValid := saleOrderDTO.CustomerID > 0 && len(saleOrderDTO.Products) > 0
+	if isValid {
+		for _, product := range saleOrderDTO.Products {
+			if (product.ProductID == 0) || (product.Quantity == 0) {
+				isValid = false
+				break
+			}
+		}
+	}
+
+	if !isValid {
+		return nil, errors.New("bad order data")
+	}
+
+	return dto.SaleOrderDtoToSaleOrder(saleOrderDTO), nil
+}
+
 func (h *Handler) Handle(ctx context.Context, writer http.ResponseWriter, request *http.Request) {
 	err := h.checkAccess(request)
 	if err != nil {
@@ -45,22 +64,21 @@ func (h *Handler) Handle(ctx context.Context, writer http.ResponseWriter, reques
 		return
 	}
 
-	products, company, customer, appendUser, err := h.validateAndPrepare(request)
+	saleOrder, err := h.validateAndPrepare(request)
 	if err != nil {
-		writer.WriteHeader(http.StatusBadRequest)
-		_, _ = writer.Write([]byte(err.Error()))
+		http.Error(writer, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	saleOrderForCast, err := h.transactor.RunInTx(ctx, func(ctx context.Context) (any, error) {
-		return h.useCase.Handle(ctx, products, company, customer, appendUser)
+	saleOrderUpdated, err := h.transactor.RunInTx(ctx, func(ctx context.Context) (any, error) {
+		return h.useCase.Handle(ctx, saleOrder)
 	})
 	if err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
+		http.Error(writer, "internal error", http.StatusInternalServerError)
 		return
 	}
 
-	saleOrder := saleOrderForCast.(*document.SaleOrder)
+	saleOrder = saleOrderUpdated.(*document.SaleOrder)
 
 	_, _ = writer.Write([]byte(fmt.Sprintf("SaleOrder ID = %d", saleOrder.ID)))
 
@@ -72,20 +90,4 @@ func (h *Handler) checkAccess(request *http.Request) error {
 		return errors.New("access denied") // demo only
 	}
 	return nil
-}
-
-func (h *Handler) validateAndPrepare(request *http.Request) (
-	products []document.SaleOrderProduct,
-	company reference.Company,
-	customer reference.Customer,
-	appendUser *reference.User,
-	err error,
-) {
-	if request.Method == http.MethodPut {
-		err = errors.New("bad request") // demo only
-		return
-	}
-
-	company.Name = request.FormValue("company_name")
-	return
 }

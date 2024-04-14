@@ -37,29 +37,13 @@ func NewUseCase(tg timeGenerator, ng numberGenerator, sos saleOrderService) *Use
 
 func (u *UseCase) Handle(
 	ctx context.Context,
-	products []document.SaleOrderProduct,
-	company reference.Company,
-	customer reference.Customer,
-	appendUser *reference.User,
-) (saleOrder *document.SaleOrder, err error) {
-	docDate := u.timeGenerator.NowDate()
-	docNumber := u.numberGenerator.GenerateNumber(docDate, company)
-	saleOrder = &document.SaleOrder{
-		Document: document.Document{
-			Number:        docNumber,
-			Date:          docDate,
-			Status:        document.StatusDraft,
-			BasisDocument: nil,
-			Company:       company,
-			AppendUser:    appendUser,
-			ChangeUser:    appendUser,
-		},
-		Customer: customer,
-		Products: products,
-	}
-	saleOrder, err = u.saleOrderService.CreateOrder(ctx, saleOrder)
+	saleOrder *document.SaleOrder,
+) (saleOrderUpdated *document.SaleOrder, err error) {
+	saleOrder.Date = u.timeGenerator.NowDate()
+	saleOrder.Number = u.numberGenerator.GenerateNumber(saleOrder.Date, saleOrder.Company)
+	saleOrderUpdated, err = u.saleOrderService.CreateOrder(ctx, saleOrder)
 	if err != nil {
 		return nil, err
 	}
-	return saleOrder, nil
+	return saleOrderUpdated, nil
 }

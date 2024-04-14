@@ -61,13 +61,7 @@ func TestHandle_Success(t *testing.T) {
 		Return(saleOrder, nil)
 
 	// act
-	actualSaleOrder, actualErr := useCase.Handle(
-		ctx,
-		saleOrder.Products,
-		saleOrder.Company,
-		saleOrder.Customer,
-		nil,
-	)
+	actualSaleOrder, actualErr := useCase.Handle(ctx, saleOrder)
 
 	// assert
 	assert.NoError(t, actualErr)
@@ -107,13 +101,7 @@ func TestHandle_Error(t *testing.T) {
 		Return(nil, createErr)
 
 	// act
-	actualSaleOrder, actualErr := useCase.Handle(
-		ctx,
-		saleOrder.Products,
-		saleOrder.Company,
-		saleOrder.Customer,
-		nil,
-	)
+	actualSaleOrder, actualErr := useCase.Handle(ctx, saleOrder)
 
 	// assert
 	assert.Nil(t, actualSaleOrder)

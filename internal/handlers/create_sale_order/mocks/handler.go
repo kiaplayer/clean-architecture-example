@@ -10,7 +10,6 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	document "github.com/kiaplayer/clean-architecture-example/internal/domain/entity/document"
-	reference "github.com/kiaplayer/clean-architecture-example/internal/domain/entity/reference"
 )
 
 // MockuseCase is a mock of useCase interface.
@@ -37,18 +36,18 @@ func (m *MockuseCase) EXPECT() *MockuseCaseMockRecorder {
 }
 
 // Handle mocks base method.
-func (m *MockuseCase) Handle(ctx context.Context, products []document.SaleOrderProduct, company reference.Company, customer reference.Customer, appendUser *reference.User) (*document.SaleOrder, error) {
+func (m *MockuseCase) Handle(arg0 context.Context, arg1 *document.SaleOrder) (*document.SaleOrder, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Handle", ctx, products, company, customer, appendUser)
+	ret := m.ctrl.Call(m, "Handle", arg0, arg1)
 	ret0, _ := ret[0].(*document.SaleOrder)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Handle indicates an expected call of Handle.
-func (mr *MockuseCaseMockRecorder) Handle(ctx, products, company, customer, appendUser interface{}) *gomock.Call {
+func (mr *MockuseCaseMockRecorder) Handle(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockuseCase)(nil).Handle), ctx, products, company, customer, appendUser)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handle", reflect.TypeOf((*MockuseCase)(nil).Handle), arg0, arg1)
 }
 
 // Mocktransactor is a mock of transactor interface.
