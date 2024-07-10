@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"fmt"
 	"slices"
+	"time"
 
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/document"
 	"github.com/kiaplayer/clean-architecture-example/pkg/helpers"
@@ -44,6 +45,8 @@ func (r *Repository) CreateOrder(ctx context.Context, order *document.SaleOrder)
 		return nil, err
 	}
 	order.ID = uint64(lastID)
+
+	time.Sleep(10 * time.Second)
 
 	return order, nil
 }

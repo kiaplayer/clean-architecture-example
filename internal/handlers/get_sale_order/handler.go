@@ -28,7 +28,7 @@ func NewHandler(u useCase) *Handler {
 	}
 }
 
-func (h *Handler) Handle(ctx context.Context, writer http.ResponseWriter, request *http.Request) {
+func (h *Handler) Handle(writer http.ResponseWriter, request *http.Request) {
 	err := h.checkAccess(request)
 	if err != nil {
 		writer.WriteHeader(http.StatusForbidden)
@@ -43,9 +43,14 @@ func (h *Handler) Handle(ctx context.Context, writer http.ResponseWriter, reques
 		return
 	}
 
-	saleOrder, err := h.useCase.Handle(ctx, saleOrderID)
+	saleOrder, err := h.useCase.Handle(request.Context(), saleOrderID)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if saleOrder == nil {
+		writer.WriteHeader(http.StatusNotFound)
+		_, _ = writer.Write([]byte(fmt.Sprint("sale order not found")))
 		return
 	}
 

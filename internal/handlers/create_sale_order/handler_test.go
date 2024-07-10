@@ -61,7 +61,7 @@ func TestHandle_Success(t *testing.T) {
 	request, requestErr := http.NewRequest(http.MethodPost, "", bodyReader)
 
 	// act
-	handler.Handle(ctx, response, request)
+	handler.Handle(response, request)
 
 	// assert
 	assert.NoError(t, requestErr)
@@ -72,7 +72,6 @@ func TestHandle_Success(t *testing.T) {
 func TestHandle_checkAccessError(t *testing.T) {
 	// arrange
 	ctrl := gomock.NewController(t)
-	ctx := context.Background()
 
 	useCaseMock := mocks.NewMockuseCase(ctrl)
 	transactorMock := mocks.NewMocktransactor(ctrl)
@@ -83,7 +82,7 @@ func TestHandle_checkAccessError(t *testing.T) {
 	request, requestErr := http.NewRequest(http.MethodDelete, "", bodyReader)
 
 	// act
-	handler.Handle(ctx, response, request)
+	handler.Handle(response, request)
 
 	// assert
 	assert.NoError(t, requestErr)
@@ -93,7 +92,6 @@ func TestHandle_checkAccessError(t *testing.T) {
 func TestHandle_validateError_emptyRequest(t *testing.T) {
 	// arrange
 	ctrl := gomock.NewController(t)
-	ctx := context.Background()
 
 	useCaseMock := mocks.NewMockuseCase(ctrl)
 	transactorMock := mocks.NewMocktransactor(ctrl)
@@ -104,7 +102,7 @@ func TestHandle_validateError_emptyRequest(t *testing.T) {
 	request, requestErr := http.NewRequest(http.MethodPost, "", bodyReader)
 
 	// act
-	handler.Handle(ctx, response, request)
+	handler.Handle(response, request)
 
 	// assert
 	assert.NoError(t, requestErr)
@@ -114,7 +112,6 @@ func TestHandle_validateError_emptyRequest(t *testing.T) {
 func TestHandle_validateError_zeroProductID(t *testing.T) {
 	// arrange
 	ctrl := gomock.NewController(t)
-	ctx := context.Background()
 
 	useCaseMock := mocks.NewMockuseCase(ctrl)
 	transactorMock := mocks.NewMocktransactor(ctrl)
@@ -125,7 +122,7 @@ func TestHandle_validateError_zeroProductID(t *testing.T) {
 	request, requestErr := http.NewRequest(http.MethodPost, "", bodyReader)
 
 	// act
-	handler.Handle(ctx, response, request)
+	handler.Handle(response, request)
 
 	// assert
 	assert.NoError(t, requestErr)
@@ -135,7 +132,6 @@ func TestHandle_validateError_zeroProductID(t *testing.T) {
 func TestHandle_validateError_invalidJSON(t *testing.T) {
 	// arrange
 	ctrl := gomock.NewController(t)
-	ctx := context.Background()
 
 	useCaseMock := mocks.NewMockuseCase(ctrl)
 	transactorMock := mocks.NewMocktransactor(ctrl)
@@ -146,7 +142,7 @@ func TestHandle_validateError_invalidJSON(t *testing.T) {
 	request, requestErr := http.NewRequest(http.MethodPost, "", bodyReader)
 
 	// act
-	handler.Handle(ctx, response, request)
+	handler.Handle(response, request)
 
 	// assert
 	assert.NoError(t, requestErr)
@@ -199,7 +195,7 @@ func TestHandle_UseCaseError(t *testing.T) {
 	request, requestErr := http.NewRequest(http.MethodPost, "", bodyReader)
 
 	// act
-	handler.Handle(ctx, response, request)
+	handler.Handle(response, request)
 
 	// assert
 	assert.NoError(t, requestErr)

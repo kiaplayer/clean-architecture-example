@@ -175,11 +175,12 @@ func TestGetByID_Success(t *testing.T) {
 
 func TestGetByID_QueryError(t *testing.T) {
 	// arrange
+	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	db, mock, _ := sqlmock.New()
+	queryExecutorMock := mocks.NewMockQueryExecutor(ctrl)
 
-	repository := NewRepository(db)
+	repository := NewRepository(queryExecutorMock)
 
 	saleOrder := &document.SaleOrder{
 		Document: document.Document{
@@ -192,10 +193,14 @@ func TestGetByID_QueryError(t *testing.T) {
 
 	queryError := errors.New("query error")
 
-	mock.
-		ExpectQuery("SELECT id, date, number, status FROM sale_order WHERE id = ?").
-		WithArgs(saleOrder.ID).
-		WillReturnError(queryError)
+	queryExecutorMock.
+		EXPECT().
+		QueryContext(
+			ctx,
+			"SELECT id, date, number, status FROM sale_order WHERE id = ?",
+			saleOrder.ID,
+		).
+		Return(nil, queryError)
 
 	// act
 	actualSaleOrder, getErr := repository.GetByID(ctx, saleOrder.ID)

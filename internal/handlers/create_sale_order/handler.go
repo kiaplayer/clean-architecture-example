@@ -56,7 +56,7 @@ func (h *Handler) validateAndPrepare(request *http.Request) (*document.SaleOrder
 	return dto.SaleOrderDtoToSaleOrder(saleOrderDTO), nil
 }
 
-func (h *Handler) Handle(ctx context.Context, writer http.ResponseWriter, request *http.Request) {
+func (h *Handler) Handle(writer http.ResponseWriter, request *http.Request) {
 	err := h.checkAccess(request)
 	if err != nil {
 		writer.WriteHeader(http.StatusForbidden)
@@ -70,7 +70,7 @@ func (h *Handler) Handle(ctx context.Context, writer http.ResponseWriter, reques
 		return
 	}
 
-	saleOrderUpdated, err := h.transactor.RunInTx(ctx, func(ctx context.Context) (any, error) {
+	saleOrderUpdated, err := h.transactor.RunInTx(request.Context(), func(ctx context.Context) (any, error) {
 		return h.useCase.Handle(ctx, saleOrder)
 	})
 	if err != nil {

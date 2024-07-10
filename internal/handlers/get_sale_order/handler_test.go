@@ -39,7 +39,7 @@ func TestHandle_Success(t *testing.T) {
 	request, requestErr := http.NewRequest(http.MethodPost, fmt.Sprintf("?id=%d", saleOrder.ID), bodyReader)
 
 	// act
-	handler.Handle(ctx, response, request)
+	handler.Handle(response, request)
 
 	// assert
 	assert.NoError(t, requestErr)
@@ -50,7 +50,6 @@ func TestHandle_Success(t *testing.T) {
 func TestHandle_checkAccessError(t *testing.T) {
 	// arrange
 	ctrl := gomock.NewController(t)
-	ctx := context.Background()
 
 	useCaseMock := mocks.NewMockuseCase(ctrl)
 	handler := NewHandler(useCaseMock)
@@ -60,7 +59,7 @@ func TestHandle_checkAccessError(t *testing.T) {
 	request, requestErr := http.NewRequest(http.MethodDelete, "", bodyReader)
 
 	// act
-	handler.Handle(ctx, response, request)
+	handler.Handle(response, request)
 
 	// assert
 	assert.NoError(t, requestErr)
@@ -71,7 +70,6 @@ func TestHandle_checkAccessError(t *testing.T) {
 func TestHandle_validateAndPrepareError_BadID(t *testing.T) {
 	// arrange
 	ctrl := gomock.NewController(t)
-	ctx := context.Background()
 
 	useCaseMock := mocks.NewMockuseCase(ctrl)
 	handler := NewHandler(useCaseMock)
@@ -81,7 +79,7 @@ func TestHandle_validateAndPrepareError_BadID(t *testing.T) {
 	request, requestErr := http.NewRequest(http.MethodPut, "?id=bad", bodyReader)
 
 	// act
-	handler.Handle(ctx, response, request)
+	handler.Handle(response, request)
 
 	// assert
 	assert.NoError(t, requestErr)
@@ -92,7 +90,6 @@ func TestHandle_validateAndPrepareError_BadID(t *testing.T) {
 func TestHandle_validateAndPrepareError_NegativeID(t *testing.T) {
 	// arrange
 	ctrl := gomock.NewController(t)
-	ctx := context.Background()
 
 	useCaseMock := mocks.NewMockuseCase(ctrl)
 	handler := NewHandler(useCaseMock)
@@ -102,7 +99,7 @@ func TestHandle_validateAndPrepareError_NegativeID(t *testing.T) {
 	request, requestErr := http.NewRequest(http.MethodPut, "?id=-11", bodyReader)
 
 	// act
-	handler.Handle(ctx, response, request)
+	handler.Handle(response, request)
 
 	// assert
 	assert.NoError(t, requestErr)
@@ -133,10 +130,35 @@ func TestHandle_UseCaseError(t *testing.T) {
 	request, requestErr := http.NewRequest(http.MethodPost, fmt.Sprintf("?id=%d", saleOrder.ID), bodyReader)
 
 	// act
-	handler.Handle(ctx, response, request)
+	handler.Handle(response, request)
 
 	// assert
 	assert.NoError(t, requestErr)
 	assert.Equal(t, http.StatusInternalServerError, response.Code)
 	assert.Empty(t, response.Body.String())
+}
+
+func TestHandle_UseCaseNotFound(t *testing.T) {
+	// arrange
+	ctrl := gomock.NewController(t)
+	ctx := context.Background()
+
+	useCaseMock := mocks.NewMockuseCase(ctrl)
+	handler := NewHandler(useCaseMock)
+
+	var saleOrderID uint64 = 123
+
+	useCaseMock.EXPECT().Handle(ctx, saleOrderID).Return(nil, nil)
+
+	bodyReader := bytes.NewReader([]byte(``))
+	response := httptest.NewRecorder()
+	request, requestErr := http.NewRequest(http.MethodPost, fmt.Sprintf("?id=%d", saleOrderID), bodyReader)
+
+	// act
+	handler.Handle(response, request)
+
+	// assert
+	assert.NoError(t, requestErr)
+	assert.Equal(t, http.StatusNotFound, response.Code)
+	assert.Equal(t, "sale order not found", response.Body.String())
 }
