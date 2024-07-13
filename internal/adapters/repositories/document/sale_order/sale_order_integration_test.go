@@ -43,7 +43,7 @@ func (rts *TestRepositorySuite) SetupSuite() {
 	}
 
 	m, err := migrate.NewWithDatabaseInstance(
-		"file://../../../../db/migrations",
+		"file://./../../../../../db/migrations",
 		"sqlite3",
 		driver,
 	)

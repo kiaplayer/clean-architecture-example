@@ -11,7 +11,8 @@ import (
 	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
 
-	"github.com/kiaplayer/clean-architecture-example/internal/adapters/repositories/sale_order"
+	"github.com/kiaplayer/clean-architecture-example/internal/adapters/repositories/document/sale_order"
+	"github.com/kiaplayer/clean-architecture-example/internal/adapters/repositories/reference/product"
 	saleorderservice "github.com/kiaplayer/clean-architecture-example/internal/domain/service/sale_order"
 	createsaleorderusecase "github.com/kiaplayer/clean-architecture-example/internal/domain/use_case/create_sale_order"
 	getsaleorderusecase "github.com/kiaplayer/clean-architecture-example/internal/domain/use_case/get_sale_order"
@@ -42,7 +43,8 @@ func main() {
 	timeGenerator := generators.NewTimeGenerator()
 	numberGenerator := generators.NewNumberGenerator()
 	saleOrderRepo := sale_order.NewRepository(dbConn)
-	saleOrderService := saleorderservice.NewService(saleOrderRepo)
+	productRepo := product.NewRepository(dbConn)
+	saleOrderService := saleorderservice.NewService(saleOrderRepo, productRepo)
 
 	createSaleOrderHandler := create_sale_order.NewHandler(
 		createsaleorderusecase.NewUseCase(timeGenerator, numberGenerator, saleOrderService),

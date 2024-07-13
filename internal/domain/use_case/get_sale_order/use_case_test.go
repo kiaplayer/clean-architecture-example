@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/document"
 	mocks "github.com/kiaplayer/clean-architecture-example/internal/domain/use_case/get_sale_order/mocks"

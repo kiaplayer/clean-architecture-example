@@ -9,6 +9,7 @@ type SaleOrder struct {
 }
 
 type SaleOrderProduct struct {
+	ID       uint64
 	Product  reference.Product
 	Quantity int
 	Price    float32
