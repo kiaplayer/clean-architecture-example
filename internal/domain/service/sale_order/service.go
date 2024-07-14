@@ -48,7 +48,7 @@ func (s *Service) CreateOrder(ctx context.Context, order *document.SaleOrder) (*
 
 func (s *Service) ValidateOrder(ctx context.Context, order *document.SaleOrder) (*document.SaleOrder, error) {
 	if !slices.Contains(document.ValidStatuses, order.Status) {
-		return nil, fmt.Errorf("bad status: %d", order.Status)
+		return nil, NewErrValidation(fmt.Sprintf("bad status: %d", order.Status), nil)
 	}
 
 	if len(order.Products) > 0 {
@@ -61,11 +61,11 @@ func (s *Service) ValidateOrder(ctx context.Context, order *document.SaleOrder) 
 		for _, productID := range slices.Compact(productsIDs) {
 			exists, err := s.productRepository.Exists(ctx, productID)
 			if err != nil {
-				return nil, err
+				return nil, NewErrValidation("check product existance error", err)
 			}
 
 			if !exists {
-				return nil, fmt.Errorf("bad product id: %d", productID)
+				return nil, NewErrValidation(fmt.Sprintf("bad product id: %d", productID), nil)
 			}
 		}
 	}

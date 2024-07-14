@@ -14,6 +14,7 @@ import (
 
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/document"
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/reference"
+	"github.com/kiaplayer/clean-architecture-example/internal/domain/service/sale_order"
 	mocks "github.com/kiaplayer/clean-architecture-example/internal/handlers/create_sale_order/mocks"
 )
 
@@ -200,4 +201,58 @@ func TestHandle_UseCaseError(t *testing.T) {
 	// assert
 	assert.NoError(t, requestErr)
 	assert.Equal(t, http.StatusInternalServerError, response.Code)
+}
+
+func TestHandle_UseCaseValidationError(t *testing.T) {
+	// arrange
+	ctrl := gomock.NewController(t)
+	ctx := context.Background()
+
+	useCaseMock := mocks.NewMockuseCase(ctrl)
+	transactorMock := mocks.NewMocktransactor(ctrl)
+	handler := NewHandler(useCaseMock, transactorMock)
+
+	saleOrder := &document.SaleOrder{
+		Customer: reference.Customer{
+			Reference: reference.Reference{
+				ID: 1,
+			},
+		},
+		Products: []document.SaleOrderProduct{
+			{
+				Product: reference.Product{
+					Reference: reference.Reference{
+						ID: 1,
+					},
+				},
+				Quantity: 1,
+			},
+		},
+	}
+
+	validationErr := sale_order.NewErrValidation("validation error", nil)
+
+	useCaseMock.EXPECT().
+		Handle(ctx, saleOrder).
+		Return(nil, validationErr)
+
+	transactorMock.EXPECT().
+		RunInTx(ctx, gomock.Any()).
+		DoAndReturn(
+			func(ctx context.Context, fn func(context.Context) (any, error)) (any, error) {
+				return fn(ctx)
+			},
+		)
+
+	bodyReader := bytes.NewReader([]byte(`{"customer_id": 1, "products": [{"product_id": 1, "quantity": 1}]}`))
+	response := httptest.NewRecorder()
+	request, requestErr := http.NewRequest(http.MethodPost, "", bodyReader)
+
+	// act
+	handler.Handle(response, request)
+
+	// assert
+	assert.NoError(t, requestErr)
+	assert.Equal(t, http.StatusBadRequest, response.Code)
+	assert.Equal(t, "validation error\n", response.Body.String())
 }

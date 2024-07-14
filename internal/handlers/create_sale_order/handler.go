@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/document"
+	"github.com/kiaplayer/clean-architecture-example/internal/domain/service/sale_order"
 	"github.com/kiaplayer/clean-architecture-example/internal/handlers/create_sale_order/dto"
 )
 
@@ -74,7 +75,12 @@ func (h *Handler) Handle(writer http.ResponseWriter, request *http.Request) {
 		return h.useCase.Handle(ctx, saleOrder)
 	})
 	if err != nil {
-		http.Error(writer, "internal error", http.StatusInternalServerError)
+		var errTarget *sale_order.ErrValidation
+		if errors.As(err, &errTarget) {
+			http.Error(writer, errTarget.Error(), http.StatusBadRequest)
+		} else {
+			http.Error(writer, "internal error", http.StatusInternalServerError)
+		}
 		return
 	}
 
