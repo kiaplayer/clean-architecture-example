@@ -13,7 +13,6 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/document"
-	mocks "github.com/kiaplayer/clean-architecture-example/internal/handlers/get_sale_order/mocks"
 )
 
 func TestHandle_Success(t *testing.T) {
@@ -21,7 +20,7 @@ func TestHandle_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	useCaseMock := mocks.NewMockuseCase(ctrl)
+	useCaseMock := NewMockuseCase(ctrl)
 	handler := NewHandler(useCaseMock)
 
 	saleOrder := &document.SaleOrder{
@@ -51,7 +50,7 @@ func TestHandle_checkAccessError(t *testing.T) {
 	// arrange
 	ctrl := gomock.NewController(t)
 
-	useCaseMock := mocks.NewMockuseCase(ctrl)
+	useCaseMock := NewMockuseCase(ctrl)
 	handler := NewHandler(useCaseMock)
 
 	bodyReader := bytes.NewReader([]byte(`{}`))
@@ -71,7 +70,7 @@ func TestHandle_validateAndPrepareError_BadID(t *testing.T) {
 	// arrange
 	ctrl := gomock.NewController(t)
 
-	useCaseMock := mocks.NewMockuseCase(ctrl)
+	useCaseMock := NewMockuseCase(ctrl)
 	handler := NewHandler(useCaseMock)
 
 	bodyReader := bytes.NewReader([]byte(`{}`))
@@ -91,7 +90,7 @@ func TestHandle_validateAndPrepareError_NegativeID(t *testing.T) {
 	// arrange
 	ctrl := gomock.NewController(t)
 
-	useCaseMock := mocks.NewMockuseCase(ctrl)
+	useCaseMock := NewMockuseCase(ctrl)
 	handler := NewHandler(useCaseMock)
 
 	bodyReader := bytes.NewReader([]byte(`{}`))
@@ -112,7 +111,7 @@ func TestHandle_UseCaseError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	useCaseMock := mocks.NewMockuseCase(ctrl)
+	useCaseMock := NewMockuseCase(ctrl)
 	handler := NewHandler(useCaseMock)
 
 	saleOrder := &document.SaleOrder{
@@ -143,7 +142,7 @@ func TestHandle_UseCaseNotFound(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	useCaseMock := mocks.NewMockuseCase(ctrl)
+	useCaseMock := NewMockuseCase(ctrl)
 	handler := NewHandler(useCaseMock)
 
 	var saleOrderID uint64 = 123

@@ -11,7 +11,6 @@ import (
 
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/document"
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/reference"
-	mocks "github.com/kiaplayer/clean-architecture-example/internal/domain/service/sale_order/mocks"
 )
 
 func TestCreateOrder_Success(t *testing.T) {
@@ -19,8 +18,8 @@ func TestCreateOrder_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	repositoryMock := mocks.NewMockrepository(ctrl)
-	productRepositoryMock := mocks.NewMockproductRepository(ctrl)
+	repositoryMock := NewMockrepository(ctrl)
+	productRepositoryMock := NewMockproductRepository(ctrl)
 
 	service := NewService(repositoryMock, productRepositoryMock)
 
@@ -67,8 +66,8 @@ func TestCreateOrder_ValidateError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	repositoryMock := mocks.NewMockrepository(ctrl)
-	productRepositoryMock := mocks.NewMockproductRepository(ctrl)
+	repositoryMock := NewMockrepository(ctrl)
+	productRepositoryMock := NewMockproductRepository(ctrl)
 
 	service := NewService(repositoryMock, productRepositoryMock)
 
@@ -93,8 +92,8 @@ func TestCreateOrder_ValidateError_BadProductID(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	repositoryMock := mocks.NewMockrepository(ctrl)
-	productRepositoryMock := mocks.NewMockproductRepository(ctrl)
+	repositoryMock := NewMockrepository(ctrl)
+	productRepositoryMock := NewMockproductRepository(ctrl)
 
 	service := NewService(repositoryMock, productRepositoryMock)
 
@@ -137,8 +136,8 @@ func TestCreateOrder_ValidateError_CheckProductIDsError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	repositoryMock := mocks.NewMockrepository(ctrl)
-	productRepositoryMock := mocks.NewMockproductRepository(ctrl)
+	repositoryMock := NewMockrepository(ctrl)
+	productRepositoryMock := NewMockproductRepository(ctrl)
 
 	service := NewService(repositoryMock, productRepositoryMock)
 
@@ -183,8 +182,8 @@ func TestCreateOrder_CreateError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	repositoryMock := mocks.NewMockrepository(ctrl)
-	productRepositoryMock := mocks.NewMockproductRepository(ctrl)
+	repositoryMock := NewMockrepository(ctrl)
+	productRepositoryMock := NewMockproductRepository(ctrl)
 
 	service := NewService(repositoryMock, productRepositoryMock)
 
@@ -214,8 +213,8 @@ func TestGetOrderByID_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	repositoryMock := mocks.NewMockrepository(ctrl)
-	productRepositoryMock := mocks.NewMockproductRepository(ctrl)
+	repositoryMock := NewMockrepository(ctrl)
+	productRepositoryMock := NewMockproductRepository(ctrl)
 
 	service := NewService(repositoryMock, productRepositoryMock)
 

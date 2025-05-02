@@ -9,7 +9,6 @@ import (
 	"go.uber.org/mock/gomock"
 
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/document"
-	mocks "github.com/kiaplayer/clean-architecture-example/internal/domain/use_case/get_sale_order/mocks"
 )
 
 func TestHandle_Success(t *testing.T) {
@@ -17,7 +16,7 @@ func TestHandle_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	saleOrderServiceMock := mocks.NewMocksaleOrderService(ctrl)
+	saleOrderServiceMock := NewMocksaleOrderService(ctrl)
 
 	useCase := NewUseCase(saleOrderServiceMock)
 
@@ -44,7 +43,7 @@ func TestHandle_Error(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	saleOrderServiceMock := mocks.NewMocksaleOrderService(ctrl)
+	saleOrderServiceMock := NewMocksaleOrderService(ctrl)
 
 	useCase := NewUseCase(saleOrderServiceMock)
 

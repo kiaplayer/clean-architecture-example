@@ -11,7 +11,6 @@ import (
 
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/document"
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/reference"
-	mocks "github.com/kiaplayer/clean-architecture-example/internal/domain/use_case/create_sale_order/mocks"
 )
 
 func TestHandle_Success(t *testing.T) {
@@ -19,9 +18,9 @@ func TestHandle_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	timeGeneratorMock := mocks.NewMocktimeGenerator(ctrl)
-	numberGeneratorMock := mocks.NewMocknumberGenerator(ctrl)
-	saleOrderServiceMock := mocks.NewMocksaleOrderService(ctrl)
+	timeGeneratorMock := NewMocktimeGenerator(ctrl)
+	numberGeneratorMock := NewMocknumberGenerator(ctrl)
+	saleOrderServiceMock := NewMocksaleOrderService(ctrl)
 
 	useCase := NewUseCase(timeGeneratorMock, numberGeneratorMock, saleOrderServiceMock)
 
@@ -73,9 +72,9 @@ func TestHandle_Error(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	timeGeneratorMock := mocks.NewMocktimeGenerator(ctrl)
-	numberGeneratorMock := mocks.NewMocknumberGenerator(ctrl)
-	saleOrderServiceMock := mocks.NewMocksaleOrderService(ctrl)
+	timeGeneratorMock := NewMocktimeGenerator(ctrl)
+	numberGeneratorMock := NewMocknumberGenerator(ctrl)
+	saleOrderServiceMock := NewMocksaleOrderService(ctrl)
 
 	useCase := NewUseCase(timeGeneratorMock, numberGeneratorMock, saleOrderServiceMock)
 

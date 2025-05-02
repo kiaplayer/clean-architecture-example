@@ -15,7 +15,6 @@ import (
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/document"
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/entity/reference"
 	"github.com/kiaplayer/clean-architecture-example/internal/domain/service/sale_order"
-	mocks "github.com/kiaplayer/clean-architecture-example/internal/handlers/create_sale_order/mocks"
 )
 
 func TestHandle_Success(t *testing.T) {
@@ -23,8 +22,8 @@ func TestHandle_Success(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	useCaseMock := mocks.NewMockuseCase(ctrl)
-	transactorMock := mocks.NewMocktransactor(ctrl)
+	useCaseMock := NewMockuseCase(ctrl)
+	transactorMock := NewMocktransactor(ctrl)
 	handler := NewHandler(useCaseMock, transactorMock)
 
 	saleOrder := &document.SaleOrder{
@@ -74,8 +73,8 @@ func TestHandle_checkAccessError(t *testing.T) {
 	// arrange
 	ctrl := gomock.NewController(t)
 
-	useCaseMock := mocks.NewMockuseCase(ctrl)
-	transactorMock := mocks.NewMocktransactor(ctrl)
+	useCaseMock := NewMockuseCase(ctrl)
+	transactorMock := NewMocktransactor(ctrl)
 	handler := NewHandler(useCaseMock, transactorMock)
 
 	bodyReader := bytes.NewReader([]byte(`{}`))
@@ -94,8 +93,8 @@ func TestHandle_validateError_emptyRequest(t *testing.T) {
 	// arrange
 	ctrl := gomock.NewController(t)
 
-	useCaseMock := mocks.NewMockuseCase(ctrl)
-	transactorMock := mocks.NewMocktransactor(ctrl)
+	useCaseMock := NewMockuseCase(ctrl)
+	transactorMock := NewMocktransactor(ctrl)
 	handler := NewHandler(useCaseMock, transactorMock)
 
 	bodyReader := bytes.NewReader([]byte(`{}`))
@@ -114,8 +113,8 @@ func TestHandle_validateError_zeroProductID(t *testing.T) {
 	// arrange
 	ctrl := gomock.NewController(t)
 
-	useCaseMock := mocks.NewMockuseCase(ctrl)
-	transactorMock := mocks.NewMocktransactor(ctrl)
+	useCaseMock := NewMockuseCase(ctrl)
+	transactorMock := NewMocktransactor(ctrl)
 	handler := NewHandler(useCaseMock, transactorMock)
 
 	bodyReader := bytes.NewReader([]byte(`{"customer_id": 1, "products": [{"product_id": 0, "quantity": 1}]}`))
@@ -134,8 +133,8 @@ func TestHandle_validateError_invalidJSON(t *testing.T) {
 	// arrange
 	ctrl := gomock.NewController(t)
 
-	useCaseMock := mocks.NewMockuseCase(ctrl)
-	transactorMock := mocks.NewMocktransactor(ctrl)
+	useCaseMock := NewMockuseCase(ctrl)
+	transactorMock := NewMocktransactor(ctrl)
 	handler := NewHandler(useCaseMock, transactorMock)
 
 	bodyReader := bytes.NewReader([]byte(`invalid_json`))
@@ -155,8 +154,8 @@ func TestHandle_UseCaseError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	useCaseMock := mocks.NewMockuseCase(ctrl)
-	transactorMock := mocks.NewMocktransactor(ctrl)
+	useCaseMock := NewMockuseCase(ctrl)
+	transactorMock := NewMocktransactor(ctrl)
 	handler := NewHandler(useCaseMock, transactorMock)
 
 	saleOrder := &document.SaleOrder{
@@ -208,8 +207,8 @@ func TestHandle_UseCaseValidationError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	ctx := context.Background()
 
-	useCaseMock := mocks.NewMockuseCase(ctrl)
-	transactorMock := mocks.NewMocktransactor(ctrl)
+	useCaseMock := NewMockuseCase(ctrl)
+	transactorMock := NewMocktransactor(ctrl)
 	handler := NewHandler(useCaseMock, transactorMock)
 
 	saleOrder := &document.SaleOrder{
